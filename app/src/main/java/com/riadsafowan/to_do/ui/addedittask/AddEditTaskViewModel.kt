@@ -1,7 +1,6 @@
 package com.riadsafowan.to_do.ui.addedittask
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
+
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,16 +8,19 @@ import com.riadsafowan.to_do.data.Task
 import com.riadsafowan.to_do.data.TaskDao
 import com.riadsafowan.to_do.ui.ADD_TASK_RESULT_OK
 import com.riadsafowan.to_do.ui.EDIT_TASK_RESULT_OK
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddEditTaskViewModel @ViewModelInject constructor(
-    @Assisted private val state: SavedStateHandle,
+@HiltViewModel
+class AddEditTaskViewModel @Inject constructor(
+    private val state: SavedStateHandle,
     private val taskDao: TaskDao
 ) : ViewModel() {
-    val task = state.get<Task>("task")
 
+    val task = state.get<Task>("task")
 
     var taskName = state.get<String>("taskName") ?: task?.taskName ?: ""
         set(value) {

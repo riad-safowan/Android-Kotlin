@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,15 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.riadsafowan.to_do.R
-import com.riadsafowan.to_do.data.SortOrder
 import com.riadsafowan.to_do.data.Task
 import com.riadsafowan.to_do.databinding.FragmentTasksBinding
 import com.riadsafowan.to_do.util.exhaustive
 import com.riadsafowan.to_do.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClickedListener {
@@ -73,10 +68,10 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
                 viewModel.onFabAddTaskClicked()
             }
         }
-        setFragmentResultListener("add_edit_request"){_,bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onEditResult(result)
-        }
+//        setFragmentResultListener("add_edit_request"){_,bundle ->
+//            val result = bundle.getInt("add_edit_result")
+//            viewModel.onEditResult(result)
+//        }
 
         viewModel.tasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
@@ -127,25 +122,25 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
         searchView.onQueryTextChanged {
             viewModel.searchQuery.value = it
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            menu.findItem(R.id.action_hide_completed_task).isChecked =
-                viewModel.preferencesFlow.first().hideCompleted
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            menu.findItem(R.id.action_hide_completed_task).isChecked =
+//                viewModel.preferencesFlow.first().hideCompleted
+//        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_sort_by_name -> {
-                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
+//                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
                 true
             }
             R.id.action_sort_by_date -> {
-                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
+//                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
                 true
             }
             R.id.action_hide_completed_task -> {
                 item.isChecked = !item.isChecked
-                viewModel.onHideCompletedSelected(item.isChecked)
+//                viewModel.onHideCompletedSelected(item.isChecked)
                 true
             }
             R.id.action_delete_all -> {

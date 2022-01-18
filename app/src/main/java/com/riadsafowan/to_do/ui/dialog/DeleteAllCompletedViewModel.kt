@@ -1,13 +1,15 @@
 package com.riadsafowan.to_do.ui.dialog
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.riadsafowan.to_do.data.TaskDao
 import com.riadsafowan.to_do.di.ApplicationScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DeleteAllCompletedViewModel @ViewModelInject constructor(
+@HiltViewModel
+class DeleteAllCompletedViewModel @Inject constructor(
     private val taskDao: TaskDao,
     @ApplicationScope private val applicationScope: CoroutineScope
 ) : ViewModel(){

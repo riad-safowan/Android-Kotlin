@@ -1,51 +1,31 @@
 package com.riadsafowan.to_do.ui.tasks
 
-import android.view.View
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.riadsafowan.to_do.data.PreferencesRepository
-import com.riadsafowan.to_do.data.SortOrder
 import com.riadsafowan.to_do.data.Task
 import com.riadsafowan.to_do.data.TaskDao
 import com.riadsafowan.to_do.ui.ADD_TASK_RESULT_OK
 import com.riadsafowan.to_do.ui.EDIT_TASK_RESULT_OK
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TasksViewModel @ViewModelInject constructor(
+@HiltViewModel
+class TasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
-    private val preferencesRepository: PreferencesRepository,
-    @Assisted private val state: SavedStateHandle
+    private val state: SavedStateHandle
 ) : ViewModel() {
 
     val searchQuery = state.getLiveData("searchQuery", "")
-    val preferencesFlow = preferencesRepository.preferencesFlow
 
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
-    private val taskFlow = combine(
-        searchQuery.asFlow(),
-        preferencesFlow
-    ) { query, filterPreference ->
-        Pair(query, filterPreference)
-    }.flatMapLatest { (searchQuery, filterPreference) ->
-        taskDao.getTasks(searchQuery, filterPreference.sortOrder, filterPreference.hideCompleted)
-    }
+    private val taskFlow = taskDao.getTasks("", "", false)
+
     val tasks = taskFlow.asLiveData()
 
-    fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
-        preferencesRepository.updateSortOrder(sortOrder)
-    }
-
-    fun onHideCompletedSelected(hideCompleted: Boolean) = viewModelScope.launch {
-        preferencesRepository.updateHideCompleted(hideCompleted)
-    }
 
     fun onFabAddTaskClicked() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)

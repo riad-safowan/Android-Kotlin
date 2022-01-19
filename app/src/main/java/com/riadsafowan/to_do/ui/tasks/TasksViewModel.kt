@@ -6,33 +6,44 @@ import com.riadsafowan.to_do.data.TaskDao
 import com.riadsafowan.to_do.ui.ADD_TASK_RESULT_OK
 import com.riadsafowan.to_do.ui.EDIT_TASK_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
-    private val state: SavedStateHandle
+    state: SavedStateHandle
 ) : ViewModel() {
 
     val searchQuery = state.getLiveData("searchQuery", "")
 
-    private val tasksEventChannel = Channel<TasksEvent>()
-    val tasksEvent = tasksEventChannel.receiveAsFlow()
+    val tasksEvent: MutableLiveData<TasksEvent> = MutableLiveData()
 
-    private val taskFlow = taskDao.getTasks("", "", false)
+    @ExperimentalCoroutinesApi
+    private val taskFlow = combine(
+        searchQuery.asFlow(),
+        flow { emit("") },
+    ) { query, filterPreference ->
+        Pair(query, filterPreference)
+    }.flatMapLatest { (searchQuery, filterPreference) ->
+        taskDao.getTasks(searchQuery, filterPreference, false)
+    }
 
+    @ExperimentalCoroutinesApi
     val tasks = taskFlow.asLiveData()
 
 
     fun onFabAddTaskClicked() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
+        tasksEvent.postValue(TasksEvent.NavigateToAddTaskScreen)
     }
 
     fun onItemClicked(task: Task) = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToEditTask(task))
+        tasksEvent.postValue(TasksEvent.NavigateToEditTask(task))
     }
 
     fun onCheckBoxClicked(task: Task, isChecked: Boolean) =
@@ -43,7 +54,7 @@ class TasksViewModel @Inject constructor(
     fun onTaskSwiped(task: Task) =
         viewModelScope.launch {
             taskDao.delete(task)
-            tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMsg(task))
+            tasksEvent.postValue(TasksEvent.ShowUndoDeleteTaskMsg(task))
         }
 
     fun onUndoDeletedClicked(task: Task) =
@@ -52,9 +63,13 @@ class TasksViewModel @Inject constructor(
         }
 
     fun onDeleteAllCompletedTaskClicked() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompleteDialog)
+        tasksEvent.postValue(TasksEvent.NavigateToDeleteAllCompleteDialog)
     }
 
+
+    private fun showTaskSavedConfirmationMsg(msg: String) = viewModelScope.launch {
+        tasksEvent.postValue(TasksEvent.ShowTaskSavedConfirmationMsg(msg))
+    }
 
     fun onEditResult(result: Int) {
         when (result) {
@@ -63,9 +78,6 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    private fun showTaskSavedConfirmationMsg(msg: String) = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.ShowTaskSavedConfirmationMsg(msg))
-    }
 
     sealed class TasksEvent {
         object NavigateToAddTaskScreen : TasksEvent()
@@ -73,7 +85,6 @@ class TasksViewModel @Inject constructor(
         data class ShowUndoDeleteTaskMsg(val task: Task) : TasksEvent()
         data class ShowTaskSavedConfirmationMsg(val msg: String) : TasksEvent()
         object NavigateToDeleteAllCompleteDialog : TasksEvent()
-
     }
 
 }

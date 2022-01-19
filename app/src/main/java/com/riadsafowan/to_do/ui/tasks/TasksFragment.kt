@@ -3,6 +3,7 @@ package com.riadsafowan.to_do.ui.tasks
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.riadsafowan.to_do.util.exhaustive
 import com.riadsafowan.to_do.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClickedListener {
@@ -77,32 +79,35 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
             taskAdapter.submitList(it)
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.tasksEvent.collect { event ->
-                when (event) {
-                    is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMsg -> {
-                        Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
-                            .setAction("Undo") {
-                                viewModel.onUndoDeletedClicked(event.task)
-                            }
-                            .show()
-                    }
-                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen ->{
-                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(null, "New task")
-                        findNavController().navigate(action)
-                    }
-                    is TasksViewModel.TasksEvent.NavigateToEditTask -> {
-                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(event.task , "Edit task")
-                        findNavController().navigate(action)
-                    }
-                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMsg ->
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
-                    TasksViewModel.TasksEvent.NavigateToDeleteAllCompleteDialog -> {
-                        val action = TasksFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
-                        findNavController().navigate(action)
-                    }
-                }.exhaustive
+
+        viewModel.tasksEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMsg -> {
+                    Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
+                        .setAction("Undo") {
+                            viewModel.onUndoDeletedClicked(event.task)
+                        }
+                        .show()
+                }
+                is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                    findNavController().navigate(
+                        R.id.action_tasksFragment_to_addEditTaskFragment,
+                        bundleOf("New task" to null)
+                    )
+                }
+                is TasksViewModel.TasksEvent.NavigateToEditTask -> {
+                    findNavController().navigate(
+                        R.id.action_tasksFragment_to_addEditTaskFragment,
+                        bundleOf("New task" to event.task)
+                    )
+                }
+                is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMsg ->
+                    Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                TasksViewModel.TasksEvent.NavigateToDeleteAllCompleteDialog -> {
+                    findNavController().navigate(R.id.action_global_deleteAllCompletedDialogFragment)
+                }
             }
+
         }
 
         setHasOptionsMenu(true)
@@ -114,15 +119,15 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
         searchView = searchItem.actionView as SearchView
 
         val pendingQuery = viewModel.searchQuery.value
-        if(pendingQuery !=null && pendingQuery.isNotEmpty()){
+        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
             searchItem.expandActionView()
-            searchView.setQuery(pendingQuery,false)
+            searchView.setQuery(pendingQuery, false)
         }
 
         searchView.onQueryTextChanged {
             viewModel.searchQuery.value = it
         }
-//        viewLifecycleOwner.lifecycleScope.launch {
+//        viewLifecycleOwner.lifecycleScope.launch { todo - make a shared preference
 //            menu.findItem(R.id.action_hide_completed_task).isChecked =
 //                viewModel.preferencesFlow.first().hideCompleted
 //        }

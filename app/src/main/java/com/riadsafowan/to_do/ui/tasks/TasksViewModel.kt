@@ -3,6 +3,7 @@ package com.riadsafowan.to_do.ui.tasks
 import androidx.lifecycle.*
 import com.riadsafowan.to_do.data.Task
 import com.riadsafowan.to_do.data.TaskDao
+import com.riadsafowan.to_do.data.TaskRepository
 import com.riadsafowan.to_do.data.pref.PreferencesRepository
 import com.riadsafowan.to_do.data.pref.SortOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
-    private val taskDao: TaskDao,
+    private val taskRepository: TaskRepository,
     private val preferencesRepository: PreferencesRepository,
     state: SavedStateHandle
 ) : ViewModel() {
@@ -35,7 +36,7 @@ class TasksViewModel @Inject constructor(
     ) { query, filterPreference ->
         Pair(query, filterPreference)
     }.flatMapLatest { (searchQuery, filterPreference) ->
-        taskDao.getTasks(
+        taskRepository.getTasks(
             searchQuery,
             filterPreference.sortOrder.name,
             filterPreference.hideCompleted
@@ -64,18 +65,18 @@ class TasksViewModel @Inject constructor(
 
     fun onCheckBoxClicked(task: Task, isChecked: Boolean) =
         viewModelScope.launch {
-            taskDao.update(task.copy(isCompleted = isChecked))
+            taskRepository.updateTask(task.copy(isCompleted = isChecked))
         }
 
     fun onTaskSwiped(task: Task) =
         viewModelScope.launch {
-            taskDao.delete(task)
+            taskRepository.deleteTask(task)
             tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMsg(task))
         }
 
     fun onUndoDeletedClicked(task: Task) =
         viewModelScope.launch {
-            taskDao.insert(task)
+            taskRepository.insertTask(task)
         }
 
     fun onDeleteAllCompletedTaskClicked() = viewModelScope.launch {

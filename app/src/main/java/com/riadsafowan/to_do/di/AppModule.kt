@@ -3,7 +3,9 @@ package com.riadsafowan.to_do.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.riadsafowan.to_do.data.TaskDao
 import com.riadsafowan.to_do.data.TaskDatabase
+import com.riadsafowan.to_do.data.TaskRepository
 import com.riadsafowan.to_do.data.pref.PreferencesRepository
 import dagger.Module
 import dagger.Provides
@@ -33,7 +35,12 @@ object AppModule {
         PreferencesRepository(context)
 
     @Provides
+    @Singleton
     fun provideTaskDao(db: TaskDatabase) = db.taskDao()
+
+    @Provides
+    @Singleton
+    fun provideTaskRepository(taskDao: TaskDao) = TaskRepository(taskDao)
 
     @ApplicationScope
     @Provides

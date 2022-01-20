@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.riadsafowan.to_do.data.Task
-import com.riadsafowan.to_do.data.TaskDao
+import com.riadsafowan.to_do.data.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
     private val state: SavedStateHandle,
-    private val taskDao: TaskDao
+    private val taskRepository: TaskRepository
 ) : ViewModel() {
 
     val task = state.get<Task>("task")
@@ -39,10 +39,10 @@ class AddEditTaskViewModel @Inject constructor(
     fun fabSaveTasksClicked() = viewModelScope.launch {
         if (taskName.trim() != "") {
             if (task != null) {
-                taskDao.update(task.copy(taskName = taskName, isImportant = taskImportance))
+                taskRepository.updateTask(task.copy(taskName = taskName, isImportant = taskImportance))
                 addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult)
             } else {
-                taskDao.insert(Task(taskName = taskName, isImportant = taskImportance))
+                taskRepository.insertTask(Task(taskName = taskName, isImportant = taskImportance))
                 addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult)
             }
         } else showInvalidInputMsg("Text cannot be empty")

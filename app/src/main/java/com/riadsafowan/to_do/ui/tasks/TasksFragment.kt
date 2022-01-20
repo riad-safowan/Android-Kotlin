@@ -5,7 +5,9 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,6 +18,7 @@ import com.riadsafowan.to_do.R
 import com.riadsafowan.to_do.data.local.room.task.Task
 import com.riadsafowan.to_do.data.local.pref.SortOrder
 import com.riadsafowan.to_do.databinding.FragmentTasksBinding
+import com.riadsafowan.to_do.ui.main.MainViewModel
 import com.riadsafowan.to_do.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -24,27 +27,26 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClickedListener {
-    private var _binding: FragmentTasksBinding? = null
+    private lateinit var binding: FragmentTasksBinding
     private val viewModel: TasksViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     lateinit var searchView: SearchView
 
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentTasksBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+    ): View {
+        binding = FragmentTasksBinding.inflate(inflater, container, false)
+        mainViewModel.title.postValue("Tasks")
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val taskAdapter = TaskAdapter(this)
-
         binding.apply {
             recyclerViewTasks.apply {
                 adapter = taskAdapter
@@ -90,20 +92,20 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
                     }
                     is TasksEvent.NavigateToAddTaskScreen -> {
                         findNavController().navigate(
-                            R.id.action_tasksFragment_to_addEditTaskFragment,
+                            R.id.addEditTaskFragment,
                             bundleOf("title" to "Add a new Task")
                         )
                     }
                     is TasksEvent.NavigateToEditTask -> {
                         findNavController().navigate(
-                            R.id.action_tasksFragment_to_addEditTaskFragment,
+                            R.id.addEditTaskFragment,
                             bundleOf("title" to "Edit task", "task" to event.task)
                         )
                     }
                     is TasksEvent.ShowTaskSavedConfirmationMsg ->
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     TasksEvent.NavigateToDeleteAllCompleteDialog -> {
-                        findNavController().navigate(R.id.action_global_deleteAllCompletedDialogFragment)
+                        findNavController().navigate(R.id.deleteAllCompletedDialogFragment)
                     }
                 }
             }
@@ -166,6 +168,5 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
     override fun onDestroyView() {
         super.onDestroyView()
         searchView.setOnQueryTextListener(null)
-        _binding = null
     }
 }

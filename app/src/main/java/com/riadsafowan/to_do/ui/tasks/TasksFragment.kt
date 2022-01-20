@@ -2,6 +2,7 @@ package com.riadsafowan.to_do.ui.tasks
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import com.riadsafowan.to_do.databinding.FragmentTasksBinding
 import com.riadsafowan.to_do.util.exhaustive
 import com.riadsafowan.to_do.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -72,44 +74,42 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
                 viewModel.onFabAddTaskClicked()
             }
         }
-//        setFragmentResultListener("add_edit_request"){_,bundle ->
-//            val result = bundle.getInt("add_edit_result")
-//            viewModel.onEditResult(result)
-//        }
 
         viewModel.tasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
 
 
-        viewModel.tasksEvent.observe(viewLifecycleOwner) { event ->
-            when (event) {
-                is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMsg -> {
-                    Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
-                        .setAction("Undo") {
-                            viewModel.onUndoDeletedClicked(event.task)
-                        }
-                        .show()
-                }
-                is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                    findNavController().navigate(
-                        R.id.action_tasksFragment_to_addEditTaskFragment,
-                        bundleOf("New task" to null)
-                    )
-                }
-                is TasksViewModel.TasksEvent.NavigateToEditTask -> {
-                    findNavController().navigate(
-                        R.id.action_tasksFragment_to_addEditTaskFragment,
-                        bundleOf("New task" to event.task)
-                    )
-                }
-                is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMsg ->
-                    Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
-                TasksViewModel.TasksEvent.NavigateToDeleteAllCompleteDialog -> {
-                    findNavController().navigate(R.id.action_global_deleteAllCompletedDialogFragment)
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.tasksEvent.collect { event ->
+
+                when (event) {
+                    is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMsg -> {
+                        Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
+                            .setAction("Undo") {
+                                viewModel.onUndoDeletedClicked(event.task)
+                            }
+                            .show()
+                    }
+                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                        findNavController().navigate(
+                            R.id.action_tasksFragment_to_addEditTaskFragment,
+                            bundleOf("title" to "Add a new Task")
+                        )
+                    }
+                    is TasksViewModel.TasksEvent.NavigateToEditTask -> {
+                        findNavController().navigate(
+                            R.id.action_tasksFragment_to_addEditTaskFragment,
+                            bundleOf("title" to "Edit task", "task" to event.task)
+                        )
+                    }
+                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMsg ->
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                    TasksViewModel.TasksEvent.NavigateToDeleteAllCompleteDialog -> {
+                        findNavController().navigate(R.id.action_global_deleteAllCompletedDialogFragment)
+                    }
                 }
             }
-
         }
 
         setHasOptionsMenu(true)

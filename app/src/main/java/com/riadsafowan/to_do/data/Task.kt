@@ -1,6 +1,8 @@
 package com.riadsafowan.to_do.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
+import java.text.DateFormat
 
 @Entity(tableName = "task_table")
 data class Task(
@@ -10,4 +12,7 @@ data class Task(
     val created: Long = System.currentTimeMillis(),
     val isImportant: Boolean = false,
     val isCompleted: Boolean = false
-)
+):Serializable{
+    val createdDateFormatted: String
+        get() = DateFormat.getDateTimeInstance().format(created)
+}

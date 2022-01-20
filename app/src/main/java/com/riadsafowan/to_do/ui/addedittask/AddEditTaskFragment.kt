@@ -29,8 +29,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             editTextTaskName.setText(viewModel.taskName)
             checkboxImportant.isChecked = viewModel.taskImportance
             checkboxImportant.jumpDrawablesToCurrentState()
-            textViewDateCreated.isVisible = viewModel.task == null
-            textViewDateCreated.text = "Created: on \"DATE\""
+            textViewDateCreated.isVisible = viewModel.task != null
+            textViewDateCreated.text = "Created: on ${viewModel.task?.createdDateFormatted}"
 
             editTextTaskName.addTextChangedListener {
                 viewModel.taskName = it.toString()
@@ -50,10 +50,6 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 when (event) {
                     is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
                         binding.editTextTaskName.clearFocus()
-//                        setFragmentResult(
-//                            "add_edit_request",
-//                            bundleOf("add_edit_result" to event.result)
-//                        )
                         findNavController().popBackStack()
                     }
                     is AddEditTaskViewModel.AddEditTaskEvent.ShowInvalidInputMsg -> {

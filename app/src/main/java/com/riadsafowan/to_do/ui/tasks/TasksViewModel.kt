@@ -9,8 +9,10 @@ import com.riadsafowan.to_do.ui.ADD_TASK_RESULT_OK
 import com.riadsafowan.to_do.ui.EDIT_TASK_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +25,8 @@ class TasksViewModel @Inject constructor(
 
     val searchQuery = state.getLiveData("searchQuery", "")
 
-    val tasksEvent: MutableLiveData<TasksEvent> = MutableLiveData()
+    private val tasksEventChannel = Channel<TasksEvent>()
+    val tasksEvent = tasksEventChannel.receiveAsFlow()
 
     val preferencesFlow = preferencesRepository.preferencesFlow
 
@@ -50,11 +53,11 @@ class TasksViewModel @Inject constructor(
 
 
     fun onFabAddTaskClicked() = viewModelScope.launch {
-        tasksEvent.postValue(TasksEvent.NavigateToAddTaskScreen)
+        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
     }
 
     fun onItemClicked(task: Task) = viewModelScope.launch {
-        tasksEvent.postValue(TasksEvent.NavigateToEditTask(task))
+        tasksEventChannel.send(TasksEvent.NavigateToEditTask(task))
     }
 
     fun onCheckBoxClicked(task: Task, isChecked: Boolean) =
@@ -65,7 +68,7 @@ class TasksViewModel @Inject constructor(
     fun onTaskSwiped(task: Task) =
         viewModelScope.launch {
             taskDao.delete(task)
-            tasksEvent.postValue(TasksEvent.ShowUndoDeleteTaskMsg(task))
+            tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMsg(task))
         }
 
     fun onUndoDeletedClicked(task: Task) =
@@ -74,12 +77,12 @@ class TasksViewModel @Inject constructor(
         }
 
     fun onDeleteAllCompletedTaskClicked() = viewModelScope.launch {
-        tasksEvent.postValue(TasksEvent.NavigateToDeleteAllCompleteDialog)
+        tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompleteDialog)
     }
 
 
     private fun showTaskSavedConfirmationMsg(msg: String) = viewModelScope.launch {
-        tasksEvent.postValue(TasksEvent.ShowTaskSavedConfirmationMsg(msg))
+        tasksEventChannel.send(TasksEvent.ShowTaskSavedConfirmationMsg(msg))
     }
 
     fun onEditResult(result: Int) {

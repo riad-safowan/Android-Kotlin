@@ -30,8 +30,13 @@ abstract class TaskDatabase : RoomDatabase() {
                 dao.insert(Task(taskName = "learning Retrofit2", isImportant = true))
                 dao.insert(Task(taskName = "learning MVVM", isImportant = true))
                 dao.insert(Task(taskName = "learning kotlin", isImportant = true))
-
-
+                dao.insert(Task(taskName = "learning RecyclerView", isCompleted = true))
+                dao.insert(Task(taskName = "learning coroutine"))
+                dao.insert(Task(taskName = "learning Hilt", isImportant = true))
+                dao.insert(Task(taskName = "learning RxJava"))
+                dao.insert(Task(taskName = "learning Retrofit2", isImportant = true))
+                dao.insert(Task(taskName = "learning MVVM", isImportant = true))
+                dao.insert(Task(taskName = "learning kotlin", isImportant = true))
             }
 
         }

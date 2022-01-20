@@ -58,7 +58,6 @@ class AddEditTaskViewModel @Inject constructor(
     sealed class AddEditTaskEvent {
         data class ShowInvalidInputMsg(val msg: String) : AddEditTaskEvent()
         data class NavigateBackWithResult(val result: Int) : AddEditTaskEvent()
-
     }
 
 

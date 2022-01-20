@@ -84,28 +84,28 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
             viewModel.tasksEvent.collect { event ->
 
                 when (event) {
-                    is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMsg -> {
+                    is TasksEvent.ShowUndoDeleteTaskMsg -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("Undo") {
                                 viewModel.onUndoDeletedClicked(event.task)
                             }
                             .show()
                     }
-                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                    is TasksEvent.NavigateToAddTaskScreen -> {
                         findNavController().navigate(
                             R.id.action_tasksFragment_to_addEditTaskFragment,
                             bundleOf("title" to "Add a new Task")
                         )
                     }
-                    is TasksViewModel.TasksEvent.NavigateToEditTask -> {
+                    is TasksEvent.NavigateToEditTask -> {
                         findNavController().navigate(
                             R.id.action_tasksFragment_to_addEditTaskFragment,
                             bundleOf("title" to "Edit task", "task" to event.task)
                         )
                     }
-                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMsg ->
+                    is TasksEvent.ShowTaskSavedConfirmationMsg ->
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
-                    TasksViewModel.TasksEvent.NavigateToDeleteAllCompleteDialog -> {
+                    TasksEvent.NavigateToDeleteAllCompleteDialog -> {
                         findNavController().navigate(R.id.action_global_deleteAllCompletedDialogFragment)
                     }
                 }

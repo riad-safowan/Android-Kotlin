@@ -48,11 +48,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.addEditTaskEvent.collect { event ->
                 when (event) {
-                    is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
+                    is AddEditTaskEvent.NavigateBackWithResult -> {
                         binding.editTextTaskName.clearFocus()
                         findNavController().popBackStack()
                     }
-                    is AddEditTaskViewModel.AddEditTaskEvent.ShowInvalidInputMsg -> {
+                    is AddEditTaskEvent.ShowInvalidInputMsg -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive

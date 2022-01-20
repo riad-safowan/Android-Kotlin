@@ -5,8 +5,6 @@ import com.riadsafowan.to_do.data.Task
 import com.riadsafowan.to_do.data.TaskDao
 import com.riadsafowan.to_do.data.pref.PreferencesRepository
 import com.riadsafowan.to_do.data.pref.SortOrder
-import com.riadsafowan.to_do.ui.ADD_TASK_RESULT_OK
-import com.riadsafowan.to_do.ui.EDIT_TASK_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
-    val preferencesRepository: PreferencesRepository,
+    private val preferencesRepository: PreferencesRepository,
     state: SavedStateHandle
 ) : ViewModel() {
 
@@ -37,7 +35,11 @@ class TasksViewModel @Inject constructor(
     ) { query, filterPreference ->
         Pair(query, filterPreference)
     }.flatMapLatest { (searchQuery, filterPreference) ->
-        taskDao.getTasks(searchQuery, filterPreference.sortOrder.name, filterPreference.hideCompleted)
+        taskDao.getTasks(
+            searchQuery,
+            filterPreference.sortOrder.name,
+            filterPreference.hideCompleted
+        )
     }
 
     @ExperimentalCoroutinesApi
@@ -79,27 +81,13 @@ class TasksViewModel @Inject constructor(
     fun onDeleteAllCompletedTaskClicked() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompleteDialog)
     }
+}
 
-
-    private fun showTaskSavedConfirmationMsg(msg: String) = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.ShowTaskSavedConfirmationMsg(msg))
-    }
-
-    fun onEditResult(result: Int) {
-        when (result) {
-            ADD_TASK_RESULT_OK -> showTaskSavedConfirmationMsg("Task added")
-            EDIT_TASK_RESULT_OK -> showTaskSavedConfirmationMsg("Task updated")
-        }
-    }
-
-
-    sealed class TasksEvent {
-        object NavigateToAddTaskScreen : TasksEvent()
-        data class NavigateToEditTask(val task: Task) : TasksEvent()
-        data class ShowUndoDeleteTaskMsg(val task: Task) : TasksEvent()
-        data class ShowTaskSavedConfirmationMsg(val msg: String) : TasksEvent()
-        object NavigateToDeleteAllCompleteDialog : TasksEvent()
-    }
-
+sealed class TasksEvent {
+    object NavigateToAddTaskScreen : TasksEvent()
+    data class NavigateToEditTask(val task: Task) : TasksEvent()
+    data class ShowUndoDeleteTaskMsg(val task: Task) : TasksEvent()
+    data class ShowTaskSavedConfirmationMsg(val msg: String) : TasksEvent()
+    object NavigateToDeleteAllCompleteDialog : TasksEvent()
 }
 

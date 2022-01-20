@@ -21,23 +21,23 @@ abstract class TaskDatabase : RoomDatabase() {
             super.onCreate(db)
 
             //database operation
-            val dao = database.get().taskDao()
-            applicationScope.launch {
-                dao.insert(Task(taskName = "learning RecyclerView", isCompleted = true))
-                dao.insert(Task(taskName = "learning coroutine"))
-                dao.insert(Task(taskName = "learning Hilt", isImportant = true))
-                dao.insert(Task(taskName = "learning RxJava"))
-                dao.insert(Task(taskName = "learning Retrofit2", isImportant = true))
-                dao.insert(Task(taskName = "learning MVVM", isImportant = true))
-                dao.insert(Task(taskName = "learning kotlin", isImportant = true))
-                dao.insert(Task(taskName = "learning RecyclerView", isCompleted = true))
-                dao.insert(Task(taskName = "learning coroutine"))
-                dao.insert(Task(taskName = "learning Hilt", isImportant = true))
-                dao.insert(Task(taskName = "learning RxJava"))
-                dao.insert(Task(taskName = "learning Retrofit2", isImportant = true))
-                dao.insert(Task(taskName = "learning MVVM", isImportant = true))
-                dao.insert(Task(taskName = "learning kotlin", isImportant = true))
-            }
+//            val dao = database.get().taskDao()
+//            applicationScope.launch {
+//                dao.insert(Task(taskName = "learning RecyclerView", isCompleted = true))
+//                dao.insert(Task(taskName = "learning coroutine"))
+//                dao.insert(Task(taskName = "learning Hilt", isImportant = true))
+//                dao.insert(Task(taskName = "learning RxJava"))
+//                dao.insert(Task(taskName = "learning Retrofit2", isImportant = true))
+//                dao.insert(Task(taskName = "learning MVVM", isImportant = true))
+//                dao.insert(Task(taskName = "learning kotlin", isImportant = true))
+//                dao.insert(Task(taskName = "learning RecyclerView", isCompleted = true))
+//                dao.insert(Task(taskName = "learning coroutine"))
+//                dao.insert(Task(taskName = "learning Hilt", isImportant = true))
+//                dao.insert(Task(taskName = "learning RxJava"))
+//                dao.insert(Task(taskName = "learning Retrofit2", isImportant = true))
+//                dao.insert(Task(taskName = "learning MVVM", isImportant = true))
+//                dao.insert(Task(taskName = "learning kotlin", isImportant = true))
+//            }
 
         }
     }

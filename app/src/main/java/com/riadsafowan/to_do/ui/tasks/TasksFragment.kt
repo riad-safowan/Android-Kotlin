@@ -153,6 +153,10 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
                 viewModel.onDeleteAllCompletedTaskClicked()
                 true
             }
+            R.id.logout -> {
+                mainViewModel.logout()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

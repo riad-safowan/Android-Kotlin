@@ -7,6 +7,7 @@ import com.riadsafowan.to_do.data.local.room.task.TaskDao
 import com.riadsafowan.to_do.data.local.room.task.TaskDatabase
 import com.riadsafowan.to_do.data.local.room.task.TaskRepository
 import com.riadsafowan.to_do.data.local.pref.PreferencesRepository
+import com.riadsafowan.to_do.data.local.pref.UserDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +34,11 @@ object AppModule {
     @Singleton
     fun providePreferenceRepository(@ApplicationContext context: Context) =
         PreferencesRepository(context)
+
+    @Provides
+    @Singleton
+    fun provideUserDataStore(@ApplicationContext context: Context) =
+        UserDataStore(context)
 
     @Provides
     @Singleton

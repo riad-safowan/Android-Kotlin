@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.riadsafowan.to_do.R
 import com.riadsafowan.to_do.data.Task
+import com.riadsafowan.to_do.data.pref.SortOrder
 import com.riadsafowan.to_do.databinding.FragmentTasksBinding
 import com.riadsafowan.to_do.util.exhaustive
 import com.riadsafowan.to_do.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -127,25 +129,25 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
         searchView.onQueryTextChanged {
             viewModel.searchQuery.value = it
         }
-//        viewLifecycleOwner.lifecycleScope.launch { todo - make a shared preference
-//            menu.findItem(R.id.action_hide_completed_task).isChecked =
-//                viewModel.preferencesFlow.first().hideCompleted
-//        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            menu.findItem(R.id.action_hide_completed_task).isChecked =
+                viewModel.preferencesFlow.first().hideCompleted
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_sort_by_name -> {
-//                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
+                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
                 true
             }
             R.id.action_sort_by_date -> {
-//                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
+                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
                 true
             }
             R.id.action_hide_completed_task -> {
                 item.isChecked = !item.isChecked
-//                viewModel.onHideCompletedSelected(item.isChecked)
+                viewModel.onHideCompletedSelected(item.isChecked)
                 true
             }
             R.id.action_delete_all -> {

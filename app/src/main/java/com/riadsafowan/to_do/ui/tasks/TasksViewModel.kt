@@ -3,20 +3,21 @@ package com.riadsafowan.to_do.ui.tasks
 import androidx.lifecycle.*
 import com.riadsafowan.to_do.data.Task
 import com.riadsafowan.to_do.data.TaskDao
+import com.riadsafowan.to_do.data.pref.PreferencesRepository
+import com.riadsafowan.to_do.data.pref.SortOrder
 import com.riadsafowan.to_do.ui.ADD_TASK_RESULT_OK
 import com.riadsafowan.to_do.ui.EDIT_TASK_RESULT_OK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    val preferencesRepository: PreferencesRepository,
     state: SavedStateHandle
 ) : ViewModel() {
 
@@ -24,18 +25,28 @@ class TasksViewModel @Inject constructor(
 
     val tasksEvent: MutableLiveData<TasksEvent> = MutableLiveData()
 
+    val preferencesFlow = preferencesRepository.preferencesFlow
+
     @ExperimentalCoroutinesApi
     private val taskFlow = combine(
         searchQuery.asFlow(),
-        flow { emit("") },
+        preferencesRepository.preferencesFlow,
     ) { query, filterPreference ->
         Pair(query, filterPreference)
     }.flatMapLatest { (searchQuery, filterPreference) ->
-        taskDao.getTasks(searchQuery, filterPreference, false)
+        taskDao.getTasks(searchQuery, filterPreference.sortOrder.name, filterPreference.hideCompleted)
     }
 
     @ExperimentalCoroutinesApi
     val tasks = taskFlow.asLiveData()
+
+    fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
+        preferencesRepository.updateSortOrder(sortOrder)
+    }
+
+    fun onHideCompletedSelected(hideCompleted: Boolean) = viewModelScope.launch {
+        preferencesRepository.updateHideCompleted(hideCompleted)
+    }
 
 
     fun onFabAddTaskClicked() = viewModelScope.launch {

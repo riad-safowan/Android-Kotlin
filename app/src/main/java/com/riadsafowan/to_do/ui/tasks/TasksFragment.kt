@@ -2,7 +2,6 @@ package com.riadsafowan.to_do.ui.tasks
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -14,13 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.riadsafowan.to_do.R
-import com.riadsafowan.to_do.data.Task
-import com.riadsafowan.to_do.data.pref.SortOrder
+import com.riadsafowan.to_do.data.local.room.task.Task
+import com.riadsafowan.to_do.data.local.pref.SortOrder
 import com.riadsafowan.to_do.databinding.FragmentTasksBinding
-import com.riadsafowan.to_do.util.exhaustive
 import com.riadsafowan.to_do.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

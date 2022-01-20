@@ -1,11 +1,10 @@
 package com.riadsafowan.to_do.ui.tasks
 
 import androidx.lifecycle.*
-import com.riadsafowan.to_do.data.Task
-import com.riadsafowan.to_do.data.TaskDao
-import com.riadsafowan.to_do.data.TaskRepository
-import com.riadsafowan.to_do.data.pref.PreferencesRepository
-import com.riadsafowan.to_do.data.pref.SortOrder
+import com.riadsafowan.to_do.data.local.room.task.Task
+import com.riadsafowan.to_do.data.local.room.task.TaskRepository
+import com.riadsafowan.to_do.data.local.pref.PreferencesRepository
+import com.riadsafowan.to_do.data.local.pref.SortOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

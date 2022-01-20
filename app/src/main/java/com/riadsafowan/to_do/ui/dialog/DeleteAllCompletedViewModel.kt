@@ -1,7 +1,7 @@
 package com.riadsafowan.to_do.ui.dialog
 
 import androidx.lifecycle.ViewModel
-import com.riadsafowan.to_do.data.TaskDao
+import com.riadsafowan.to_do.data.local.room.task.TaskDao
 import com.riadsafowan.to_do.di.ApplicationScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope

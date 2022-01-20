@@ -1,12 +1,9 @@
-package com.riadsafowan.to_do.data.pref
+package com.riadsafowan.to_do.data.local.pref
 
 import android.content.Context
 import android.util.Log
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.datastore.preferences.*
 import androidx.datastore.preferences.core.*
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException

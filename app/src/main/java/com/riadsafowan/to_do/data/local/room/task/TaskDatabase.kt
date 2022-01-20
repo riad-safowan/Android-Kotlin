@@ -1,11 +1,10 @@
-package com.riadsafowan.to_do.data
+package com.riadsafowan.to_do.data.local.room.task
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.riadsafowan.to_do.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 

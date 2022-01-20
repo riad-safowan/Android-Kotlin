@@ -4,8 +4,8 @@ package com.riadsafowan.to_do.ui.addedittask
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.riadsafowan.to_do.data.Task
-import com.riadsafowan.to_do.data.TaskRepository
+import com.riadsafowan.to_do.data.local.room.task.Task
+import com.riadsafowan.to_do.data.local.room.task.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

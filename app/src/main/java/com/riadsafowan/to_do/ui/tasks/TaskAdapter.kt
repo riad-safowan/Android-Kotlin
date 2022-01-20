@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.riadsafowan.to_do.data.Task
+import com.riadsafowan.to_do.data.local.room.task.Task
 import com.riadsafowan.to_do.databinding.ItemTasksBinding
 
 class TaskAdapter(private val listener: OnItemClickedListener) :

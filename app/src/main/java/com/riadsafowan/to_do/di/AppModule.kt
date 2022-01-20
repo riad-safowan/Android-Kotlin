@@ -3,10 +3,10 @@ package com.riadsafowan.to_do.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.riadsafowan.to_do.data.TaskDao
-import com.riadsafowan.to_do.data.TaskDatabase
-import com.riadsafowan.to_do.data.TaskRepository
-import com.riadsafowan.to_do.data.pref.PreferencesRepository
+import com.riadsafowan.to_do.data.local.room.task.TaskDao
+import com.riadsafowan.to_do.data.local.room.task.TaskDatabase
+import com.riadsafowan.to_do.data.local.room.task.TaskRepository
+import com.riadsafowan.to_do.data.local.pref.PreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +18,7 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class) //@InstallIn(SingletonComponent::class)
+@InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides

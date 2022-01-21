@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/addEditTaskFragment"
         android:name="com.riadsafowan.to_do.ui.addedittask.AddEditTaskFragment"
-        android:label="{title}"
+        android:label="AddEditTaskFragment"
         tools:layout="@layout/fragment_add_edit_task">
     </fragment>
     <dialog
@@ -26,4 +26,9 @@
     <action
         android:id="@+id/action_global_deleteAllCompletedDialogFragment"
         app:destination="@id/deleteAllCompletedDialogFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.riadsafowan.to_do.ui.login.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>

@@ -8,6 +8,7 @@ import com.riadsafowan.to_do.data.local.room.task.TaskDatabase
 import com.riadsafowan.to_do.data.local.room.task.TaskRepository
 import com.riadsafowan.to_do.data.local.pref.PreferencesRepository
 import com.riadsafowan.to_do.data.local.pref.UserDataStore
+import com.riadsafowan.to_do.data.remote.ApiClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -19,7 +19,7 @@ class UserDataStore(val context: Context) {
         val EMAIL = stringPreferencesKey("email")
     }
 
-    suspend fun save(userData: UserData) {
+     suspend fun save(userData: UserData) {
         context.dataStore.edit {
             it[NAME] = userData.name
             it[EMAIL] = userData.email
@@ -36,7 +36,7 @@ class UserDataStore(val context: Context) {
         )
     }
 
-    suspend fun isLogged(): Flow<Boolean> = context.dataStore.data.map {
+     fun isLogged(): Flow<Boolean> = context.dataStore.data.map {
         it[IS_LOGGED_IN] ?: false
     }
 

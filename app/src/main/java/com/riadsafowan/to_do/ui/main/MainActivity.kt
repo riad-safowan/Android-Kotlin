@@ -66,17 +66,14 @@ class MainActivity : AppCompatActivity() {
             drawer.closeDrawer(GravityCompat.START)
             return@setNavigationItemSelectedListener true
         }
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            drawer.closeDrawer(GravityCompat.START)
+        }
 
         viewModel.title.observe(this) {
             binding.toolbar.title = it
         }
 
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            when (destination.id) {
-//                R.id.tasksFragment -> binding.toolbar.title = destination.label
-//                R.id.addEditTaskFragment -> binding.toolbar.title = destination.label
-//            }
-//        }
     }
 
     @DelicateCoroutinesApi
@@ -93,13 +90,18 @@ class MainActivity : AppCompatActivity() {
                     launch(Dispatchers.Main) {
                         hBinding.name.text = it.name
                         hBinding.textView.text = it.email
-                        hBinding.name.visibility = View.VISIBLE
-                        hBinding.textView.visibility = View.VISIBLE
+
+                        hBinding.notLoggedLayout.visibility = View.GONE
+                        hBinding.isLoggedLayout.visibility = View.VISIBLE
                     }
                 } else {
                     launch(Dispatchers.Main) {
-                        hBinding.name.visibility = View.GONE
-                        hBinding.textView.visibility = View.GONE
+                        hBinding.isLoggedLayout.visibility = View.GONE
+                        hBinding.notLoggedLayout.visibility = View.VISIBLE
+
+                        hBinding.login.setOnClickListener {
+                            navController.navigate(R.id.loginFragment)
+                        }
                     }
                 }
             }

@@ -5,6 +5,8 @@ import com.riadsafowan.to_do.data.local.room.task.Task
 import com.riadsafowan.to_do.data.local.room.task.TaskRepository
 import com.riadsafowan.to_do.data.local.pref.PreferencesRepository
 import com.riadsafowan.to_do.data.local.pref.SortOrder
+import com.riadsafowan.to_do.data.local.pref.UserDataStore
+import com.riadsafowan.to_do.data.remote.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class TasksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val preferencesRepository: PreferencesRepository,
+    private val authRepository: AuthRepository,
     state: SavedStateHandle
 ) : ViewModel() {
 
@@ -56,6 +59,7 @@ class TasksViewModel @Inject constructor(
 
     fun onFabAddTaskClicked() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
+
     }
 
     fun onItemClicked(task: Task) = viewModelScope.launch {

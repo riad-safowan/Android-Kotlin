@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.riadsafowan.to_do.data.local.room.task.Task
 import com.riadsafowan.to_do.data.local.room.task.TaskRepository
+import com.riadsafowan.to_do.data.model.task.TaskRequest
+import com.riadsafowan.to_do.data.remote.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
     private val state: SavedStateHandle,
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     val task = state.get<Task>("task")
@@ -42,6 +45,7 @@ class AddEditTaskViewModel @Inject constructor(
                 taskRepository.updateTask(task.copy(taskName = taskName, isImportant = taskImportance))
                 addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult)
             } else {
+                authRepository.addTask(TaskRequest(taskName, taskImportance, 2342542,false))
                 taskRepository.insertTask(Task(taskName = taskName, isImportant = taskImportance))
                 addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult)
             }

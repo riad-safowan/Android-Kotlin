@@ -24,8 +24,8 @@ class SignupViewModel @Inject constructor(
     private val userDataStore: UserDataStore
 ) : ViewModel() {
 
-    private val _signupForm = MutableLiveData<LoginFormState>()
-    val signupFormState: LiveData<LoginFormState> = _signupForm
+    private val _signupForm = MutableLiveData<SignupFormState>()
+    val signupFormState: LiveData<SignupFormState> = _signupForm
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
@@ -44,21 +44,33 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun signupDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            _signupForm.value = LoginFormState(usernameError = R.string.invalid_username)
+    fun signupDataChanged(
+        firstName: String,
+        lastName: String,
+        phn: String,
+        email: String,
+        password: String
+    ) {
+        if (firstName.isEmpty()) _signupForm.value =
+            SignupFormState(firstnameError = R.string.invalid_name)
+        else if (lastName.isEmpty()) _signupForm.value =
+            SignupFormState(lastnameError = R.string.invalid_name)
+        else if (phn.isEmpty() || phn.length < 10) _signupForm.value =
+            SignupFormState(phnError = R.string.invalid_phone)
+        else if (!isEmailValid(email)) {
+            _signupForm.value = SignupFormState(emailError = R.string.invalid_email)
         } else if (!isPasswordValid(password)) {
-            _signupForm.value = LoginFormState(passwordError = R.string.invalid_password)
+            _signupForm.value = SignupFormState(passwordError = R.string.invalid_password)
         } else {
-            _signupForm.value = LoginFormState(isDataValid = true)
+            _signupForm.value = SignupFormState(isDataValid = true)
         }
     }
 
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains("@")) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    private fun isEmailValid(email: String): Boolean {
+        return if (email.contains("@")) {
+            Patterns.EMAIL_ADDRESS.matcher(email).matches()
         } else {
-            username.isNotBlank()
+            email.isNotBlank()
         }
     }
 

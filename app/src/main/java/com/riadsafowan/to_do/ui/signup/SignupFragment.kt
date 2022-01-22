@@ -31,13 +31,27 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 return@observe
             }
             binding.login.isEnabled = signupFormState.isDataValid
-            signupFormState.usernameError?.let {
-                binding.firstName.error = getString(it)
+            signupFormState.firstnameError?.let {
+                if (binding.firstName.text.toString().isNotEmpty())
+                    binding.firstName.error = getString(it)
+            }
+            signupFormState.lastnameError?.let {
+                if (binding.lastName.text.toString().isNotEmpty())
+                    binding.lastName.error = getString(it)
+            }
+            signupFormState.phnError?.let {
+                if (binding.phone.text.toString().isNotEmpty())
+                    binding.phone.error = getString(it)
+            }
+            signupFormState.emailError?.let {
+                if (binding.email.text.toString().isNotEmpty())
+                    binding.email.error = getString(it)
             }
             signupFormState.passwordError?.let {
-                binding.password.error = getString(it)
+                if (binding.password.text.toString().isNotEmpty())
+                    binding.password.error = getString(it)
             }
-            //todo add else
+
         }
 
         viewModel.loginResult.observe(viewLifecycleOwner) { loginResult ->
@@ -63,6 +77,9 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
             override fun afterTextChanged(s: Editable) {
                 viewModel.signupDataChanged(
                     binding.firstName.text.toString(),
+                    binding.lastName.text.toString(),
+                    binding.phone.text.toString(),
+                    binding.email.text.toString(),
                     binding.password.text.toString()
                 )
             }
@@ -97,8 +114,6 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 )
             )
         }
-
-
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

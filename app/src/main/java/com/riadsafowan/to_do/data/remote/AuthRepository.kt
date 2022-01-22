@@ -1,12 +1,19 @@
 package com.riadsafowan.to_do.data.remote
 
+import com.riadsafowan.to_do.data.local.pref.UserDataStore
 import com.riadsafowan.to_do.data.model.login.LoginResponse
 import com.riadsafowan.to_do.data.model.signup.SignupRequest
+import com.riadsafowan.to_do.data.model.task.TaskRequest
+import com.riadsafowan.to_do.data.model.token.TokenModel
 import com.riadsafowan.to_do.ui.login.data.LoginDataSource
 import com.riadsafowan.to_do.ui.login.data.Result
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(private val dataSource: LoginDataSource) {
+class AuthRepository @Inject constructor(
+    private val apiClient: ApiClient,
+    private val dataSource: LoginDataSource,
+    private val userDataStore: UserDataStore
+) : SafeApiCall {
 
     var user: LoginResponse? = null
 
@@ -15,6 +22,7 @@ class AuthRepository @Inject constructor(private val dataSource: LoginDataSource
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)
+            userDataStore.saveToken(TokenModel(result.data.accessToken, result.data.refreshToken))
         }
 
         return result
@@ -29,8 +37,11 @@ class AuthRepository @Inject constructor(private val dataSource: LoginDataSource
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)
+            userDataStore.saveToken(TokenModel(result.data.accessToken, result.data.refreshToken))
         }
 
         return result
     }
+
+    suspend fun addTask(taskRequest: TaskRequest) = safeApiCall { apiClient.addTask(taskRequest) }
 }

@@ -1,6 +1,8 @@
 package com.riadsafowan.to_do.di
 
+import com.riadsafowan.to_do.data.local.pref.UserDataStore
 import com.riadsafowan.to_do.data.remote.ApiClient
+import com.riadsafowan.to_do.data.remote.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,11 +20,11 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+    fun provideOkHttpClient(userDataStore: UserDataStore): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(120, TimeUnit.SECONDS)
         .readTimeout(120, TimeUnit.SECONDS)
         .writeTimeout(120, TimeUnit.SECONDS)
-//        .addInterceptor(AuthInterceptor())
+        .addInterceptor(AuthInterceptor(userDataStore))
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()
 

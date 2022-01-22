@@ -3,8 +3,10 @@ package com.riadsafowan.to_do.data.local.room.task
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.riadsafowan.to_do.data.local.pref.UserDataStore
 import com.riadsafowan.to_do.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -20,8 +22,8 @@ abstract class TaskDatabase : RoomDatabase() {
             super.onCreate(db)
 
             //database operation
-//            val dao = database.get().taskDao()
-//            applicationScope.launch {
+            val dao = database.get().taskDao()
+            applicationScope.launch {
 //                dao.insert(Task(taskName = "learning RecyclerView", isCompleted = true))
 //                dao.insert(Task(taskName = "learning coroutine"))
 //                dao.insert(Task(taskName = "learning Hilt", isImportant = true))
@@ -35,8 +37,7 @@ abstract class TaskDatabase : RoomDatabase() {
 //                dao.insert(Task(taskName = "learning RxJava"))
 //                dao.insert(Task(taskName = "learning Retrofit2", isImportant = true))
 //                dao.insert(Task(taskName = "learning MVVM", isImportant = true))
-//                dao.insert(Task(taskName = "learning kotlin", isImportant = true))
-//            }
+            }
 
         }
     }

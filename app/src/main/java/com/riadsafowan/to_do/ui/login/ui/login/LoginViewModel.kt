@@ -31,7 +31,7 @@ class LoginViewModel @Inject constructor(
         val result = authRepository.login(username, password)
 
         if (result is Result.Success) {
-            val name = result.data.firstName + result.data.lastName
+            val name = "${result.data.firstName} ${result.data.lastName}"
             _loginResult.value =
                 LoginResult(success = LoggedInUserView(displayName = name))
             userDataStore.save(UserData(name, result.data.email!!, true))
@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(
 
     fun loginDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+            _loginForm.value = LoginFormState(usernameError = R.string.invalid_name)
         } else if (!isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {

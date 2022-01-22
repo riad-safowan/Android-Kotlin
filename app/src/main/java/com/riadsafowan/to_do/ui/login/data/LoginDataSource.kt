@@ -6,7 +6,9 @@ import com.riadsafowan.to_do.data.model.signup.SignupRequest
 import com.riadsafowan.to_do.data.remote.ApiClient
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LoginDataSource @Inject constructor(
     private val apiClient: ApiClient
 ) {

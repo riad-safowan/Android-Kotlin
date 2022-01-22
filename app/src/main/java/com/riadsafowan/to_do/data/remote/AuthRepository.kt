@@ -9,7 +9,7 @@ import com.riadsafowan.to_do.ui.login.data.LoginDataSource
 import com.riadsafowan.to_do.ui.login.data.Result
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(
+open class AuthRepository @Inject constructor(
     private val apiClient: ApiClient,
     private val dataSource: LoginDataSource,
     private val userDataStore: UserDataStore

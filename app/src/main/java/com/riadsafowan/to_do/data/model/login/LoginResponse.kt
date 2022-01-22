@@ -1,4 +1,4 @@
-package com.riadsafowan.to_do.data.model
+package com.riadsafowan.to_do.data.model.login
 
 import com.google.gson.annotations.SerializedName
 

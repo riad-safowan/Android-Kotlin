@@ -39,7 +39,6 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentTasksBinding.inflate(inflater, container, false)
-        mainViewModel.title.postValue("Tasks")
         return binding.root
     }
 

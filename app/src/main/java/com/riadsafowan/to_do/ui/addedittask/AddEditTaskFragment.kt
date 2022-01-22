@@ -1,10 +1,8 @@
 package com.riadsafowan.to_do.ui.addedittask
 
-import android.app.Activity
+
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -29,10 +27,6 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentAddEditTaskBinding.bind(view)
-
-        if (viewModel.task != null) {
-            mainViewModel.title.postValue("Edit Task")
-        } else mainViewModel.title.postValue("Add a new Task")
 
         binding.apply {
             editTextTaskName.setText(viewModel.taskName)

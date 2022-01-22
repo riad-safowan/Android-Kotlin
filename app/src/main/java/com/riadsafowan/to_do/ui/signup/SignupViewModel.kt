@@ -1,37 +1,41 @@
-package com.riadsafowan.to_do.ui.login.ui.login
+package com.riadsafowan.to_do.ui.signup
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.riadsafowan.to_do.R
 import com.riadsafowan.to_do.data.local.pref.UserData
 import com.riadsafowan.to_do.data.local.pref.UserDataStore
+import com.riadsafowan.to_do.data.model.signup.SignupRequest
 import com.riadsafowan.to_do.data.remote.AuthRepository
 import com.riadsafowan.to_do.ui.login.data.Result
+import com.riadsafowan.to_do.ui.login.ui.login.LoggedInUserView
+import com.riadsafowan.to_do.ui.login.ui.login.LoginFormState
+import com.riadsafowan.to_do.ui.login.ui.login.LoginResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class SignupViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userDataStore: UserDataStore
 ) : ViewModel() {
 
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
+    private val _signupForm = MutableLiveData<LoginFormState>()
+    val signupFormState: LiveData<LoginFormState> = _signupForm
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) = viewModelScope.launch {
+    fun signup(signupRequest: SignupRequest) = viewModelScope.launch {
 
-        val result = authRepository.login(username, password)
+        val result = authRepository.signup(signupRequest)
 
         if (result is Result.Success) {
-            val name = result.data.firstName + result.data.lastName
+            val name = "${result.data.firstName} ${result.data.lastName}"
             _loginResult.value =
                 LoginResult(success = LoggedInUserView(displayName = name))
             userDataStore.save(UserData(name, result.data.email!!, true))
@@ -40,13 +44,13 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
+    fun signupDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+            _signupForm.value = LoginFormState(usernameError = R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+            _signupForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
+            _signupForm.value = LoginFormState(isDataValid = true)
         }
     }
 
@@ -61,4 +65,5 @@ class LoginViewModel @Inject constructor(
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
+
 }

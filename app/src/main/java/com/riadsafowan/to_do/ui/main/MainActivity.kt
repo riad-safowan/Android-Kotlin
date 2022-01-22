@@ -68,10 +68,18 @@ class MainActivity : AppCompatActivity() {
         }
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             drawer.closeDrawer(GravityCompat.START)
-        }
+            when (destination.id) {
+                R.id.tasksFragment -> binding.toolbar.title = "Tasks"
+                R.id.loginFragment -> binding.toolbar.title = "Login"
+                R.id.signupFragment -> binding.toolbar.title = "Signup"
+                R.id.addEditTaskFragment -> {
+                    arguments?.getString("title").let {
+                        binding.toolbar.title = it!!
+                    }
+                }
+            }
 
-        viewModel.title.observe(this) {
-            binding.toolbar.title = it
+
         }
 
     }
@@ -101,6 +109,9 @@ class MainActivity : AppCompatActivity() {
 
                         hBinding.login.setOnClickListener {
                             navController.navigate(R.id.loginFragment)
+                        }
+                        hBinding.signup.setOnClickListener {
+                            navController.navigate(R.id.signupFragment)
                         }
                     }
                 }

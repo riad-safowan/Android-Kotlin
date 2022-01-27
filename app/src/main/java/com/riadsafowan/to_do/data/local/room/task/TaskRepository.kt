@@ -12,6 +12,11 @@ class TaskRepository(private val taskDao: TaskDao) {
     }
 
     @WorkerThread
+    suspend fun insertAll(task: List<Task>) = withContext(Dispatchers.IO) {
+        taskDao.insertAll(task)
+    }
+
+    @WorkerThread
     suspend fun updateTask(task: Task) = withContext(Dispatchers.IO) {
         taskDao.update(task)
     }
@@ -24,6 +29,11 @@ class TaskRepository(private val taskDao: TaskDao) {
     @WorkerThread
     suspend fun deleteTask(task: Task) {
         taskDao.delete(task)
+    }
+
+    @WorkerThread
+    suspend fun deleteAllTasks() {
+        taskDao.deleteAllTasks()
     }
 
 }

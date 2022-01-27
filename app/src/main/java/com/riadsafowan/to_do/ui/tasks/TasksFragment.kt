@@ -1,7 +1,10 @@
 package com.riadsafowan.to_do.ui.tasks
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -24,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import okhttp3.*
 
 @AndroidEntryPoint
 class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClickedListener {
@@ -69,7 +73,8 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
             }).attachToRecyclerView(recyclerViewTasks)
 
             fabAddTasks.setOnClickListener {
-                viewModel.onFabAddTaskClicked()
+//                viewModel.onFabAddTaskClicked()
+                playWithWebSocket()
             }
         }
 
@@ -172,4 +177,41 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TaskAdapter.OnItemClick
         super.onDestroyView()
         searchView.setOnQueryTextListener(null)
     }
+
+
+    private fun playWithWebSocket() {
+        val request = Request.Builder().url("ws://192.168.31.215:9090/ws").build()
+        OkHttpClient.Builder().build().newWebSocket(request, object : WebSocketListener() {
+            override fun onOpen(webSocket: WebSocket, response: Response) {
+                super.onOpen(webSocket, response)
+                webSocket.send("Connecting from frontend")
+                webSocket.send("Connected")
+
+            }
+
+            override fun onMessage(webSocket: WebSocket, text: String) {
+                super.onMessage(webSocket, text)
+                output("Receiving : " + text)
+            }
+
+            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+                super.onClosing(webSocket, code, reason)
+                output("Closing : " + code + "/" + reason)
+            }
+
+            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                super.onFailure(webSocket, t, response)
+                output("Error : " + t.message)
+            }
+
+            fun output(text: String) {
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+    }
+
 }

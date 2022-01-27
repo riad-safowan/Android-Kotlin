@@ -9,10 +9,9 @@ import com.riadsafowan.to_do.R
 import com.riadsafowan.to_do.data.local.pref.UserData
 import com.riadsafowan.to_do.data.local.pref.UserDataStore
 import com.riadsafowan.to_do.data.model.signup.SignupRequest
-import com.riadsafowan.to_do.data.remote.AuthRepository
+import com.riadsafowan.to_do.data.remote.ApiRepository
 import com.riadsafowan.to_do.ui.login.data.Result
 import com.riadsafowan.to_do.ui.login.ui.login.LoggedInUserView
-import com.riadsafowan.to_do.ui.login.ui.login.LoginFormState
 import com.riadsafowan.to_do.ui.login.ui.login.LoginResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+    private val apiRepository: ApiRepository,
     private val userDataStore: UserDataStore
 ) : ViewModel() {
 
@@ -32,7 +31,7 @@ class SignupViewModel @Inject constructor(
 
     fun signup(signupRequest: SignupRequest) = viewModelScope.launch {
 
-        val result = authRepository.signup(signupRequest)
+        val result = apiRepository.signup(signupRequest)
 
         if (result is Result.Success) {
             val name = "${result.data.firstName} ${result.data.lastName}"

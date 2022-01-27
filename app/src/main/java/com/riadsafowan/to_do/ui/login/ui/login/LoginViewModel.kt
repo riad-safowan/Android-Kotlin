@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.riadsafowan.to_do.R
 import com.riadsafowan.to_do.data.local.pref.UserData
 import com.riadsafowan.to_do.data.local.pref.UserDataStore
-import com.riadsafowan.to_do.data.remote.AuthRepository
+import com.riadsafowan.to_do.data.remote.ApiRepository
 import com.riadsafowan.to_do.ui.login.data.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+    private val apiRepository: ApiRepository,
     private val userDataStore: UserDataStore
 ) : ViewModel() {
 
@@ -28,7 +28,7 @@ class LoginViewModel @Inject constructor(
 
     fun login(username: String, password: String) = viewModelScope.launch {
 
-        val result = authRepository.login(username, password)
+        val result = apiRepository.login(username, password)
 
         if (result is Result.Success) {
             val name = "${result.data.firstName} ${result.data.lastName}"

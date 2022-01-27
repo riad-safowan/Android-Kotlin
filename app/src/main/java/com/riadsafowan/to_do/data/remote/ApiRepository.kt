@@ -9,7 +9,7 @@ import com.riadsafowan.to_do.ui.login.data.LoginDataSource
 import com.riadsafowan.to_do.ui.login.data.Result
 import javax.inject.Inject
 
-open class AuthRepository @Inject constructor(
+open class ApiRepository @Inject constructor(
     private val apiClient: ApiClient,
     private val dataSource: LoginDataSource,
     private val userDataStore: UserDataStore
@@ -44,4 +44,7 @@ open class AuthRepository @Inject constructor(
     }
 
     suspend fun addTask(taskRequest: TaskRequest) = safeApiCall { apiClient.addTask(taskRequest) }
+    suspend fun addTasks(taskRequest: List<TaskRequest>) = safeApiCall { apiClient.addTasks(taskRequest) }
+    suspend fun getTaskById(id: String) = safeApiCall { apiClient.getTaskById(id) }
+    suspend fun getTasks() = safeApiCall { apiClient.getTasks() }
 }

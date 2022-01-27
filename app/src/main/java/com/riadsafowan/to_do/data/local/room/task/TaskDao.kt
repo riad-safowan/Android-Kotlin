@@ -26,6 +26,9 @@ interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(task: Task)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(task: List<Task>)
+
     @Update
     suspend fun update(task: Task)
 
@@ -34,5 +37,8 @@ interface TaskDao {
 
     @Query("DELETE FROM task_table WHERE isCompleted=1")
     suspend fun deleteCompletedTask()
+
+    @Query("DELETE FROM task_table")
+    suspend fun deleteAllTasks()
 
 }

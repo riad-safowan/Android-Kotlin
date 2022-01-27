@@ -10,16 +10,26 @@ import com.riadsafowan.to_do.util.Const
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiClient {
 
-    @POST(Const.BASE_URL + "/users/login")
+    @POST("/users/login")
     suspend fun login(@Body request: LoginRequest): LoginResponse
 
-    @POST(Const.BASE_URL + "/users/signup")
+    @POST("/users/signup")
     suspend fun signup(@Body signupRequest: SignupRequest): LoginResponse
 
-    @POST(Const.BASE_URL + "/user/task")
+    @POST("/user/task")
     suspend fun addTask(@Body taskRequest: TaskRequest): List<TaskResponse>
+
+    @POST("/user/tasks")
+    suspend fun addTasks(@Body taskRequest: List<TaskRequest>): List<TaskResponse>
+
+    @GET("/user/tasks/{task_id}")
+    suspend fun getTaskById(@Path("task_id") id: String): TaskResponse
+
+    @GET("/user/tasks")
+    suspend fun getTasks(): List<TaskResponse>
 
 }

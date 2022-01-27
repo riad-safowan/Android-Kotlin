@@ -1,26 +1,29 @@
 package com.riadsafowan.to_do.ui.tasks
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.riadsafowan.to_do.data.local.room.task.Task
 import com.riadsafowan.to_do.data.local.room.task.TaskRepository
 import com.riadsafowan.to_do.data.local.pref.PreferencesRepository
 import com.riadsafowan.to_do.data.local.pref.SortOrder
-import com.riadsafowan.to_do.data.local.pref.UserDataStore
-import com.riadsafowan.to_do.data.remote.AuthRepository
+import com.riadsafowan.to_do.data.remote.ApiRepository
+import com.riadsafowan.to_do.data.remote.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import okhttp3.internal.notify
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val preferencesRepository: PreferencesRepository,
-    private val authRepository: AuthRepository,
+    private val apiRepository: ApiRepository,
     state: SavedStateHandle
 ) : ViewModel() {
 
@@ -48,6 +51,35 @@ class TasksViewModel @Inject constructor(
     @ExperimentalCoroutinesApi
     val tasks = taskFlow.asLiveData()
 
+    init {
+//        deleteALlTasks()
+//        fetchTasks()
+    }
+
+    fun fetchTasks() = viewModelScope.launch {
+        val tasksDeferred = async { apiRepository.getTasks() }
+        val tasks = tasksDeferred.await()
+        if (tasks is Response.Success) {
+            Log.d("TAG", "fetchTasks: succed")
+            Log.d("TAG", "fetchTasks: size:" + tasks.value.size)
+            var i = 0;
+            val list = ArrayList<Task>()
+            tasks.value.forEach {
+                list.add(
+                    Task(
+                        taskName = it.taskName + " " + i++,
+                        isCompleted = it.isImportant ?: false,
+                        isImportant = it.isImportant ?: true,
+                    )
+                )
+            }
+            taskRepository.insertAll(list)
+        } else if (tasks is Response.Failure) {
+            Log.d("TAG", "fetchTasks: failed" + tasks.errorBody)
+        }
+        Log.d("TAG", "fetchTasks: done")
+    }
+
     fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
         preferencesRepository.updateSortOrder(sortOrder)
     }
@@ -58,8 +90,8 @@ class TasksViewModel @Inject constructor(
 
 
     fun onFabAddTaskClicked() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
-
+//        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
+        fetchTasks()
     }
 
     fun onItemClicked(task: Task) = viewModelScope.launch {
@@ -84,6 +116,10 @@ class TasksViewModel @Inject constructor(
 
     fun onDeleteAllCompletedTaskClicked() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompleteDialog)
+    }
+
+    fun deleteALlTasks() = viewModelScope.launch {
+        taskRepository.deleteAllTasks()
     }
 }
 

@@ -7,15 +7,13 @@ import com.riadsafowan.to_do.data.local.room.task.TaskRepository
 import com.riadsafowan.to_do.data.local.pref.PreferencesRepository
 import com.riadsafowan.to_do.data.local.pref.SortOrder
 import com.riadsafowan.to_do.data.remote.ApiRepository
-import com.riadsafowan.to_do.data.remote.Response
+import com.riadsafowan.to_do.data.remote.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
-import okhttp3.internal.notify
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -59,12 +57,12 @@ class TasksViewModel @Inject constructor(
     fun fetchTasks() = viewModelScope.launch {
         val tasksDeferred = async { apiRepository.getTasks() }
         val tasks = tasksDeferred.await()
-        if (tasks is Response.Success) {
+        if (tasks is ApiResult.Success) {
             Log.d("TAG", "fetchTasks: succed")
-            Log.d("TAG", "fetchTasks: size:" + tasks.value.size)
+            Log.d("TAG", "fetchTasks: size:" + tasks.value.data?.size)
             var i = 0;
             val list = ArrayList<Task>()
-            tasks.value.forEach {
+            tasks.value.data?.forEach {
                 list.add(
                     Task(
                         taskName = it.taskName + " " + i++,
@@ -74,7 +72,7 @@ class TasksViewModel @Inject constructor(
                 )
             }
             taskRepository.insertAll(list)
-        } else if (tasks is Response.Failure) {
+        } else if (tasks is ApiResult.Failure) {
             Log.d("TAG", "fetchTasks: failed" + tasks.errorBody)
         }
         Log.d("TAG", "fetchTasks: done")

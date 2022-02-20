@@ -12,21 +12,21 @@ import javax.inject.Singleton
 class LoginDataSource @Inject constructor(
     private val apiClient: ApiClient
 ) {
-    suspend fun login(username: String, password: String): Result<LoginResponse> {
-        try {
-            val user = apiClient.login(LoginRequest(email = username, password = password))
-            return Result.Success(user)
-        } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
-        }
-    }
-
-    suspend fun signup(signupRequest: SignupRequest): Result<LoginResponse> {
-        try {
-            val user = apiClient.signup(signupRequest)
-            return Result.Success(user)
-        } catch (e: Throwable) {
-            return Result.Error(IOException("Error signing in", e))
-        }
-    }
+//    suspend fun login(username: String, password: String): Result<LoginResponse> {
+//        try {
+//            val user = apiClient.login(LoginRequest(email = username, password = password))
+//            return Result.Success(user)
+//        } catch (e: Throwable) {
+//            return Result.Error(IOException("Error logging in", e))
+//        }
+//    }
+//
+//    suspend fun signup(signupRequest: SignupRequest): Result<LoginResponse> {
+//        try {
+//            val user = apiClient.signup(signupRequest)
+//            return Result.Success(user)
+//        } catch (e: Throwable) {
+//            return Result.Error(IOException("Error signing in", e))
+//        }
+//    }
 }

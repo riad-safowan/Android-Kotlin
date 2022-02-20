@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.riadsafowan.to_do.R
 import com.riadsafowan.to_do.data.local.pref.UserData
 import com.riadsafowan.to_do.data.local.pref.UserDataStore
+import com.riadsafowan.to_do.data.model.token.TokenModel
 import com.riadsafowan.to_do.data.remote.ApiRepository
-import com.riadsafowan.to_do.ui.login.data.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,11 +30,13 @@ class LoginViewModel @Inject constructor(
 
         val result = apiRepository.login(username, password)
 
-        if (result is Result.Success) {
-            val name = "${result.data.firstName} ${result.data.lastName}"
+        if (result is com.riadsafowan.to_do.data.remote.ApiResult.Success) {
+            userDataStore.saveToken(TokenModel(result.value.data?.accessToken, result.value.data?.refreshToken))
+
+            val name = "${result.value.data?.firstName} ${result.value.data?.lastName}"
             _loginResult.value =
                 LoginResult(success = LoggedInUserView(displayName = name))
-            userDataStore.save(UserData(name, result.data.email!!, true))
+            userDataStore.save(UserData(name, result.value.data?.email!!, true))
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }

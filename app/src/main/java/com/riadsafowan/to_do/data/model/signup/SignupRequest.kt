@@ -13,9 +13,6 @@ data class SignupRequest(
 	@field:SerializedName("last_name")
 	val lastName: String? = null,
 
-	@field:SerializedName("phone_number")
-	val phoneNumber: String? = null,
-
 	@field:SerializedName("first_name")
 	val firstName: String? = null,
 

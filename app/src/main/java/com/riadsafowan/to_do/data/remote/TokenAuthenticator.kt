@@ -17,7 +17,7 @@ class TokenAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         return runBlocking {
             when (val tokenResponse = getUpdatedToken()) {
-                is com.riadsafowan.to_do.data.remote.Response.Success -> {
+                is ApiResult.Success -> {
                     userDataStore.saveToken(
                         TokenModel(
                             tokenResponse.value.accessToken!!,
@@ -33,11 +33,11 @@ class TokenAuthenticator @Inject constructor(
         }
     }
 
-    private suspend fun getUpdatedToken(): com.riadsafowan.to_do.data.remote.Response<TokenModel> {
+    private suspend fun getUpdatedToken(): ApiResult<TokenModel> {
         try {
-            return com.riadsafowan.to_do.data.remote.Response.Success(apiClient.refreshToken())
+            return ApiResult.Success(apiClient.refreshToken())
         } catch (e: Exception) {
-            return com.riadsafowan.to_do.data.remote.Response.Failure(false, 0, null)
+            return ApiResult.Failure(false, 0, null)
         }
     }
 }

@@ -39,10 +39,6 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 if (binding.lastName.text.toString().isNotEmpty())
                     binding.lastName.error = getString(it)
             }
-            signupFormState.phnError?.let {
-                if (binding.phone.text.toString().isNotEmpty())
-                    binding.phone.error = getString(it)
-            }
             signupFormState.emailError?.let {
                 if (binding.email.text.toString().isNotEmpty())
                     binding.email.error = getString(it)
@@ -78,7 +74,6 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 viewModel.signupDataChanged(
                     binding.firstName.text.toString(),
                     binding.lastName.text.toString(),
-                    binding.phone.text.toString(),
                     binding.email.text.toString(),
                     binding.password.text.toString()
                 )
@@ -93,7 +88,6 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                     SignupRequest(
                         firstName = binding.firstName.text.toString(),
                         lastName = binding.lastName.text.toString(),
-                        phoneNumber = binding.phone.text.toString(),
                         email = binding.email.text.toString(),
                         password = binding.password.text.toString()
                     )
@@ -108,7 +102,6 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 SignupRequest(
                     firstName = binding.firstName.text.toString(),
                     lastName = binding.lastName.text.toString(),
-                    phoneNumber = binding.phone.text.toString(),
                     email = binding.email.text.toString(),
                     password = binding.password.text.toString()
                 )

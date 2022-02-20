@@ -10,20 +10,14 @@ data class LoginResponse(
 	@field:SerializedName("refresh_token")
 	val refreshToken: String? = null,
 
-	@field:SerializedName("updated_at")
-	val updatedAt: String? = null,
-
 	@field:SerializedName("user_id")
-	val userId: String? = null,
+	val userId: Int? = null,
+
+	@field:SerializedName("image_url")
+	val imageUrl: Any? = null,
 
 	@field:SerializedName("last_name")
 	val lastName: String? = null,
-
-	@field:SerializedName("created_at")
-	val createdAt: String? = null,
-
-	@field:SerializedName("phone_number")
-	val phoneNumber: String? = null,
 
 	@field:SerializedName("first_name")
 	val firstName: String? = null,

@@ -5,16 +5,16 @@ import retrofit2.HttpException
 interface SafeApiCall {
     suspend fun <T> safeApiCall(
         apiCall: suspend () -> T
-    ): Response<T> {
+    ): ApiResult<T> {
         return try {
-            Response.Success(apiCall.invoke())
+            ApiResult.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
             when (throwable) {
                 is HttpException -> {
-                    Response.Failure(false, throwable.code(), throwable.response()?.errorBody())
+                    ApiResult.Failure(false, throwable.code(), throwable.response()?.errorBody())
                 }
                 else -> {
-                    Response.Failure(true, null, null)
+                    ApiResult.Failure(true, null, null)
                 }
             }
         }

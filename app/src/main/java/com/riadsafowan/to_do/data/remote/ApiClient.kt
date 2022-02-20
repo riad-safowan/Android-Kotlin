@@ -5,12 +5,9 @@ import com.riadsafowan.to_do.data.model.login.LoginResponse
 import com.riadsafowan.to_do.data.model.signup.SignupRequest
 import com.riadsafowan.to_do.data.model.task.TaskRequest
 import com.riadsafowan.to_do.data.model.task.TaskResponse
-import com.riadsafowan.to_do.data.model.token.TokenModel
-import com.riadsafowan.to_do.util.Const
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import okhttp3.MultipartBody
+import retrofit2.Call
+import retrofit2.http.*
 
 interface ApiClient {
 
@@ -31,5 +28,9 @@ interface ApiClient {
 
     @GET("/user/tasks")
     suspend fun getTasks(): BaseResponse<List<TaskResponse>>
+
+    @Multipart
+    @POST("/upload/profileimage")
+    suspend fun uploadProfileImage(@Part image: MultipartBody.Part): BaseResponse<LoginResponse>
 
 }

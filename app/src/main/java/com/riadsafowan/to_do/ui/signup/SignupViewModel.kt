@@ -35,11 +35,23 @@ class SignupViewModel @Inject constructor(
         val result = apiRepository.signup(signupRequest)
 
         if (result is ApiResult.Success) {
-            userDataStore.saveToken(TokenModel(result.value.data?.accessToken, result.value.data?.refreshToken))
+            userDataStore.saveToken(
+                TokenModel(
+                    result.value.data?.accessToken,
+                    result.value.data?.refreshToken
+                )
+            )
             val name = "${result.value.data?.firstName} ${result.value.data?.lastName}"
             _loginResult.value =
                 LoginResult(success = LoggedInUserView(displayName = name))
-            userDataStore.save(UserData(name, result.value.data?.email!!, true))
+            userDataStore.save(
+                UserData(
+                    name,
+                    result.value.data?.email!!,
+                    result.value.data.imageUrl ?: "",
+                    true
+                )
+            )
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
         }

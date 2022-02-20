@@ -14,7 +14,7 @@ data class LoginResponse(
 	val userId: Int? = null,
 
 	@field:SerializedName("image_url")
-	val imageUrl: Any? = null,
+	val imageUrl: String? = null,
 
 	@field:SerializedName("last_name")
 	val lastName: String? = null,

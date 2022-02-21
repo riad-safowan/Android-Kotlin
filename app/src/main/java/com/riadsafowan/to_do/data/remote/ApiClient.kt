@@ -2,6 +2,7 @@ package com.riadsafowan.to_do.data.remote
 
 import com.riadsafowan.to_do.data.model.LoginRequest
 import com.riadsafowan.to_do.data.model.login.LoginResponse
+import com.riadsafowan.to_do.data.model.posts.PostResponse
 import com.riadsafowan.to_do.data.model.signup.SignupRequest
 import com.riadsafowan.to_do.data.model.task.TaskRequest
 import com.riadsafowan.to_do.data.model.task.TaskResponse
@@ -32,5 +33,8 @@ interface ApiClient {
     @Multipart
     @POST("/upload/profileimage")
     suspend fun uploadProfileImage(@Part image: MultipartBody.Part): BaseResponse<LoginResponse>
+
+    @GET("/posts")
+    suspend fun getPosts(): BaseResponse<List<PostResponse>>
 
 }

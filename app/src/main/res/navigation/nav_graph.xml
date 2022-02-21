@@ -36,4 +36,8 @@
         android:name="com.riadsafowan.to_do.ui.signup.SignupFragment"
         android:label="fragment_signup"
         tools:layout="@layout/fragment_signup" />
+    <fragment
+        android:id="@+id/postsFragment"
+        android:name="com.riadsafowan.to_do.ui.posts.PostsFragment"
+        android:label="PostsFragment" />
 </navigation>

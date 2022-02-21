@@ -7,5 +7,11 @@
         <item
             android:id="@+id/tasks"
             android:title="Tasks" />
+        <item
+            android:id="@+id/posts"
+            android:title="News Feed" />
+        <item
+            android:id="@+id/logout"
+            android:title="Logout" />
     </group>
 </menu>

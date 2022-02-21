@@ -23,4 +23,5 @@ open class ApiRepository @Inject constructor(
     suspend fun getTaskById(id: String) = safeApiCall { apiClient.getTaskById(id) }
     suspend fun getTasks() = safeApiCall { apiClient.getTasks() }
     suspend fun uploadProfileImage( image: MultipartBody.Part) = safeApiCall { apiClient.uploadProfileImage(image) }
+    suspend fun getPosts( ) = safeApiCall { apiClient.getPosts() }
 }

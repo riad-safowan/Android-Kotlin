@@ -75,6 +75,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.tasks -> {
                     navController.navigate(R.id.tasksFragment)
                 }
+                R.id.posts -> {
+                    navController.navigate(R.id.postsFragment)
+                }
+                R.id.logout -> {
+                    viewModel.logout()
+                }
             }
             drawer.closeDrawer(GravityCompat.START)
             return@setNavigationItemSelectedListener true
@@ -90,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                         binding.toolbar.title = it!!
                     }
                 }
+                R.id.postsFragment -> binding.toolbar.title = "NewsFeed"
             }
         }
     }
@@ -108,10 +115,10 @@ class MainActivity : AppCompatActivity() {
                     launch(Dispatchers.Main) {
                         hBinding.name.text = it.name
                         hBinding.textView.text = it.email
-                        if(it.imageUrl.isNotEmpty())
+
                         Glide.with(this@MainActivity)
                             .load(it.imageUrl)
-                            .placeholder(R.drawable.ic_launcher_foreground)
+                            .placeholder(R.mipmap.person)
                             .into(hBinding.imageView)
 
                         hBinding.notLoggedLayout.visibility = View.GONE

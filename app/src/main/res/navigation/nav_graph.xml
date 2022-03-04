@@ -40,4 +40,9 @@
         android:id="@+id/postsFragment"
         android:name="com.riadsafowan.to_do.ui.posts.PostsFragment"
         android:label="PostsFragment" />
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.riadsafowan.to_do.ui.posts.createPost.CreatePostFragment"
+        android:label="fragment_create_post"
+        tools:layout="@layout/fragment_create_post" />
 </navigation>

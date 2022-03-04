@@ -18,5 +18,7 @@
     <string name="prompt_last_name">Last Name</string>
     <string name="prompt_phone">Phone Number</string>
     <string name="action_sign_up">Register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

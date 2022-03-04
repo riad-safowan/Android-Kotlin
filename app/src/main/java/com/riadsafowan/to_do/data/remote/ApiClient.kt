@@ -2,6 +2,7 @@ package com.riadsafowan.to_do.data.remote
 
 import com.riadsafowan.to_do.data.model.LoginRequest
 import com.riadsafowan.to_do.data.model.login.LoginResponse
+import com.riadsafowan.to_do.data.model.posts.PostRequest
 import com.riadsafowan.to_do.data.model.posts.PostResponse
 import com.riadsafowan.to_do.data.model.signup.SignupRequest
 import com.riadsafowan.to_do.data.model.task.TaskRequest
@@ -36,5 +37,11 @@ interface ApiClient {
 
     @GET("/posts")
     suspend fun getPosts(): BaseResponse<List<PostResponse>>
+
+    @POST("/post")
+    suspend fun createPost(@Body postRequest: PostRequest): BaseResponse<PostResponse>
+
+    @GET("/post/like/{id}")
+    suspend fun likePost(@Path("id") id: Int): BaseResponse<PostResponse>
 
 }

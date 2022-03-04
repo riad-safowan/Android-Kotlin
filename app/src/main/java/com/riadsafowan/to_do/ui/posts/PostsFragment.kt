@@ -64,6 +64,9 @@ class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClick
                 postAdapter.submitList(it)
             }
 
+            fabAddPosts.setOnClickListener {
+                findNavController().navigate(R.id.createPostFragment)
+            }
         }
 
     }
@@ -72,7 +75,8 @@ class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClick
 
     }
 
-    override fun onCheckBoxClicked(post: PostResponse, isChecked: Boolean) {
+    override fun onLikeBtnClicked(postId: Int) {
+        viewModel.likePost(postId)
 
     }
 }

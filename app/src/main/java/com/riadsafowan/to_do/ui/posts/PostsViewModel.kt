@@ -24,7 +24,10 @@ class PostsViewModel @Inject constructor(
         if (response is ApiResult.Success) {
             posts.postValue(response.value.data!!)
         }
+    }
 
+    fun likePost(postId: Int)=viewModelScope.launch {
+        val response = apiRepository.likePost(postId)
     }
 
 }

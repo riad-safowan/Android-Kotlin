@@ -1,7 +1,10 @@
 package com.riadsafowan.to_do.ui.posts
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.riadsafowan.to_do.R
 import com.riadsafowan.to_do.data.model.posts.PostResponse
 import com.riadsafowan.to_do.databinding.ItemPostsBinding
-import com.riadsafowan.to_do.databinding.ItemTasksBinding
 
 class PostAdapter(private val listener: OnItemClickedListener) :
     ListAdapter<PostResponse, PostAdapter.PostViewHolder>(PostItemDiffUtilCallback()) {
@@ -38,29 +40,40 @@ class PostAdapter(private val listener: OnItemClickedListener) :
 //                        listener.onItemClicked(task)
 //                    }
 //                }
-//                checkboxCompleted.setOnClickListener {
-//                    val position= adapterPosition
-//                    if (position!= RecyclerView.NO_POSITION){
-//                        val task = getItem(position)
-//                        listener.onCheckBoxClicked(task, checkboxCompleted.isChecked)
-//                    }
-//                }
+                likeBtn.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val post = getItem(position)
+                        post.isliked = !post.isliked!!
+                        post.likes = if (post.isliked!!) {
+                            post.likes!! + 1
+
+                        } else {
+                            post.likes!! - 1
+                        }
+                        bind(post)
+                        listener.onLikeBtnClicked(post.postId!!)
+                    }
+                }
 
             }
         }
 
+        @SuppressLint("SetTextI18n")
         fun bind(post: PostResponse) {
             binding.apply {
-//                checkboxCompleted.isChecked = task.isCompleted
-//                textViewName.text = task.taskName
-//                textViewName.paint.isStrikeThruText = task.isCompleted
-//                labelPriority.isVisible = task.isImportant
                 Glide.with(binding.root)
                     .load(post.userImageUrl)
                     .placeholder(R.drawable.ic_baseline_person_24)
                     .into(binding.image)
                 name.text = post.userName
                 text.text = post.text
+                if (post.isliked!!)
+                    likeBtn.setColorFilter(ContextCompat.getColor(likeBtn.context, R.color.black))
+                else likeBtn.setColorFilter(ContextCompat.getColor(likeBtn.context, R.color.normal))
+                likes.text = post.likes.toString() + if (post.likes!! > 1) " likes" else " like"
+                comments.text =
+                    post.comments.toString() + if (post.comments!! > 1) " comments" else " comment"
             }
         }
 
@@ -68,7 +81,7 @@ class PostAdapter(private val listener: OnItemClickedListener) :
 
     interface OnItemClickedListener {
         fun onItemClicked(post: PostResponse)
-        fun onCheckBoxClicked(post: PostResponse, isChecked: Boolean)
+        fun onLikeBtnClicked(postId: Int)
     }
 
     class PostItemDiffUtilCallback : DiffUtil.ItemCallback<PostResponse>() {

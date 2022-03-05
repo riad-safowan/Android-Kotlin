@@ -40,7 +40,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClick
     private lateinit var binding: FragmentPostsBinding
     private val viewModel: PostsViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-    lateinit var searchView: SearchView
 
 
     override fun onCreateView(
@@ -97,5 +96,9 @@ class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClick
     override fun onLikeBtnClicked(postId: Int) {
         viewModel.likePost(postId)
 
+    }
+
+    override fun onCommentBtnClicked(postId: Int) {
+        findNavController().navigate(R.id.commentsFragment, bundleOf(Pair("postId", postId)))
     }
 }

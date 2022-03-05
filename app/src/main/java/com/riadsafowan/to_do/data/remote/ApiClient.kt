@@ -4,6 +4,8 @@ import com.riadsafowan.to_do.data.model.LoginRequest
 import com.riadsafowan.to_do.data.model.login.LoginResponse
 import com.riadsafowan.to_do.data.model.posts.PostRequest
 import com.riadsafowan.to_do.data.model.posts.PostResponse
+import com.riadsafowan.to_do.data.model.posts.comment.CommentRequest
+import com.riadsafowan.to_do.data.model.posts.comment.CommentResponse
 import com.riadsafowan.to_do.data.model.signup.SignupRequest
 import com.riadsafowan.to_do.data.model.task.TaskRequest
 import com.riadsafowan.to_do.data.model.task.TaskResponse
@@ -48,5 +50,11 @@ interface ApiClient {
 
     @GET("/post/like/{id}")
     suspend fun likePost(@Path("id") id: Int): BaseResponse<PostResponse>
+
+    @GET("/comments/{postId}")
+    suspend fun getComments(@Path("postId") id: Int) : BaseResponse<List<CommentResponse>>
+
+    @POST("/comment/{postId}")
+    suspend fun createComment(@Path("postId") id: Int, @Body comment : CommentRequest): BaseResponse<List<CommentResponse>>
 
 }

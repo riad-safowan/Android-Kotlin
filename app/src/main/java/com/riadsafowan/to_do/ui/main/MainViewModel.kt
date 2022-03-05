@@ -1,24 +1,15 @@
 package com.riadsafowan.to_do.ui.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.riadsafowan.to_do.data.local.pref.UserData
 import com.riadsafowan.to_do.data.local.pref.UserDataStore
-import com.riadsafowan.to_do.data.model.login.LoginResponse
-import com.riadsafowan.to_do.data.remote.ApiClient
 import com.riadsafowan.to_do.data.remote.ApiRepository
 import com.riadsafowan.to_do.data.remote.ApiResult
-import com.riadsafowan.to_do.data.remote.BaseResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import javax.inject.Inject
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -38,6 +29,7 @@ class MainViewModel @Inject constructor(
             userDataStore.saveImgUrl(response.value.data?.imageUrl)
         } else if (response is ApiResult.Failure) {
         }
+
 //        val call = apiClient.uploadProfileImage(image)
 //
 //        call.enqueue(object : Callback<BaseResponse<LoginResponse>> {
@@ -51,7 +43,6 @@ class MainViewModel @Inject constructor(
 //            override fun onFailure(call: Call<BaseResponse<LoginResponse>>, t: Throwable) {
 //                Log.d("TAG", "onFailure: "+ t.message)
 //            }
-//
 //        })
 
     }

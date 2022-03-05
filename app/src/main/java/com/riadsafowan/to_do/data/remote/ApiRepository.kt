@@ -2,6 +2,7 @@ package com.riadsafowan.to_do.data.remote
 
 import com.riadsafowan.to_do.data.model.LoginRequest
 import com.riadsafowan.to_do.data.model.posts.PostRequest
+import com.riadsafowan.to_do.data.model.posts.comment.CommentRequest
 import com.riadsafowan.to_do.data.model.signup.SignupRequest
 import com.riadsafowan.to_do.data.model.task.TaskRequest
 import okhttp3.MultipartBody
@@ -28,4 +29,6 @@ open class ApiRepository @Inject constructor(
     suspend fun createPost(postRequest: PostRequest) = safeApiCall { apiClient.createPost(postRequest) }
     suspend fun uploadPostImage(image: MultipartBody.Part, id: Int) = safeApiCall { apiClient.uploadPostImage(image, id) }
     suspend fun likePost(id: Int)=safeApiCall { apiClient.likePost(id)}
+    suspend fun getComments(id: Int)= safeApiCall { apiClient.getComments(id) }
+    suspend fun createComment(id: Int, request: CommentRequest) = safeApiCall { apiClient.createComment(id,request) }
 }

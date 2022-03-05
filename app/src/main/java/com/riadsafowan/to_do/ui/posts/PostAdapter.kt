@@ -55,7 +55,13 @@ class PostAdapter(private val listener: OnItemClickedListener) :
                         listener.onLikeBtnClicked(post.postId!!)
                     }
                 }
-
+                commentBtn.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val post = getItem(position)
+                        listener.onCommentBtnClicked(post.postId!!)
+                    }
+                }
             }
         }
 
@@ -97,6 +103,7 @@ class PostAdapter(private val listener: OnItemClickedListener) :
     interface OnItemClickedListener {
         fun onItemClicked(post: PostResponse)
         fun onLikeBtnClicked(postId: Int)
+        fun onCommentBtnClicked(postId: Int)
     }
 
     class PostItemDiffUtilCallback : DiffUtil.ItemCallback<PostResponse>() {

@@ -35,18 +35,8 @@ class MainViewModel @Inject constructor(
     fun uploadImage(image: MultipartBody.Part) = viewModelScope.launch {
         val response = apiRepository.uploadProfileImage(image)
         if (response is ApiResult.Success) {
-            val name = "${response.value.data?.firstName} ${response.value.data?.lastName}"
-            userDataStore.save(
-                UserData(
-                    name,
-                    response.value.data?.email!!,
-                    response.value.data.imageUrl ?: "",
-                    true
-                )
-            )
-            Log.d("TAG", "uploadImage: " + response.value.data?.imageUrl)
+            userDataStore.saveImgUrl(response.value.data?.imageUrl)
         } else if (response is ApiResult.Failure) {
-            Log.d("TAG", "uploadImage: " + response.errorCode + " " + response.errorCode)
         }
 //        val call = apiClient.uploadProfileImage(image)
 //

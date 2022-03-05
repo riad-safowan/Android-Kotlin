@@ -53,6 +53,11 @@ class UserDataStore(val context: Context) {
             it[REFRESH_TOKEN] = tokenModel.refreshToken ?: ""
         }
     }
+    suspend fun saveImgUrl(url: String?) {
+        context.dataStore.edit {
+            it[IMG_URL] = url ?: ""
+        }
+    }
 
     suspend fun getToken(): TokenModel {
         val flow: Flow<TokenModel> = context.dataStore.data.map {

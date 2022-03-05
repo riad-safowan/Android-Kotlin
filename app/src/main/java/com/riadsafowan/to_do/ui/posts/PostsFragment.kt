@@ -46,6 +46,15 @@ class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClick
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPostsBinding.inflate(inflater, container, false)
+
+        requireActivity().lifecycleScope.launchWhenStarted {
+            mainViewModel.userDataFlow.collect {
+                if (!it.isLoggedIn) {
+                    findNavController().navigate(R.id.loginFragment)
+                }
+            }
+        }
+
         return binding.root
     }
 

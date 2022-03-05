@@ -31,6 +31,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import androidx.activity.result.ActivityResult
 import com.github.dhaval2404.imagepicker.ImagePicker
+import kotlinx.coroutines.flow.first
 
 
 @AndroidEntryPoint
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
 
 
-        navView.setCheckedItem(R.id.tasks)
+        navView.setCheckedItem(R.id.posts)
         navDrawer()
 
         navView.setNavigationItemSelectedListener {
@@ -80,6 +81,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.logout -> {
                     viewModel.logout()
+                    navController.navigate(R.id.loginFragment)
                 }
             }
             drawer.closeDrawer(GravityCompat.START)
@@ -88,15 +90,27 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             drawer.closeDrawer(GravityCompat.START)
             when (destination.id) {
-                R.id.tasksFragment -> binding.toolbar.title = "Tasks"
-                R.id.loginFragment -> binding.toolbar.title = "Login"
-                R.id.signupFragment -> binding.toolbar.title = "Signup"
+                R.id.tasksFragment -> {
+                    binding.toolbar.title = "Tasks"
+                    navView.setCheckedItem(R.id.tasks)
+                }
+                R.id.loginFragment -> {
+                    binding.toolbar.title = "Login"
+                    navView.setCheckedItem(R.id.logout)
+                }
+                R.id.signupFragment -> {
+                    binding.toolbar.title = "Signup"
+                    navView.setCheckedItem(R.id.logout)
+                }
                 R.id.addEditTaskFragment -> {
                     arguments?.getString("title").let {
                         binding.toolbar.title = it!!
                     }
                 }
-                R.id.postsFragment -> binding.toolbar.title = "NewsFeed"
+                R.id.postsFragment -> {
+                    binding.toolbar.title = "NewsFeed"
+                    navView.setCheckedItem(R.id.posts)
+                }
             }
         }
     }
@@ -123,6 +137,7 @@ class MainActivity : AppCompatActivity() {
 
                         hBinding.notLoggedLayout.visibility = View.GONE
                         hBinding.isLoggedLayout.visibility = View.VISIBLE
+                        navController.navigate(R.id.postsFragment)
                     }
                 } else {
                     launch(Dispatchers.Main) {
@@ -135,6 +150,7 @@ class MainActivity : AppCompatActivity() {
                         hBinding.signup.setOnClickListener {
                             navController.navigate(R.id.signupFragment)
                         }
+                        navController.navigate(R.id.loginFragment)
                     }
                 }
             }

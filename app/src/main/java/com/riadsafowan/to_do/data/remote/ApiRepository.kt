@@ -26,5 +26,6 @@ open class ApiRepository @Inject constructor(
     suspend fun uploadProfileImage( image: MultipartBody.Part) = safeApiCall { apiClient.uploadProfileImage(image) }
     suspend fun getPosts( ) = safeApiCall { apiClient.getPosts() }
     suspend fun createPost(postRequest: PostRequest) = safeApiCall { apiClient.createPost(postRequest) }
+    suspend fun uploadPostImage(image: MultipartBody.Part, id: Int) = safeApiCall { apiClient.uploadPostImage(image, id) }
     suspend fun likePost(id: Int)=safeApiCall { apiClient.likePost(id)}
 }

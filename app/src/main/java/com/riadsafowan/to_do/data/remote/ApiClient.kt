@@ -41,6 +41,11 @@ interface ApiClient {
     @POST("/post")
     suspend fun createPost(@Body postRequest: PostRequest): BaseResponse<PostResponse>
 
+    @Multipart
+    @POST("/upload/postimage/{id}")
+    suspend fun uploadPostImage(@Part image: MultipartBody.Part, @Path("id") id: Int): BaseResponse<PostResponse>
+
+
     @GET("/post/like/{id}")
     suspend fun likePost(@Path("id") id: Int): BaseResponse<PostResponse>
 

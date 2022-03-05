@@ -2,8 +2,8 @@ package com.riadsafowan.to_do.ui.posts
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -67,7 +67,22 @@ class PostAdapter(private val listener: OnItemClickedListener) :
                     .placeholder(R.drawable.ic_baseline_person_24)
                     .into(binding.image)
                 name.text = post.userName
-                text.text = post.text
+                if (post.text.isNullOrEmpty()) {
+                    text.visibility = View.GONE
+                } else {
+                    text.text = post.text
+                    text.visibility = View.VISIBLE
+                }
+
+                if (!post.imageUrl.isNullOrEmpty()) {
+                    Glide.with(binding.root)
+                        .load(post.imageUrl)
+                        .into(binding.postImage)
+                    binding.postImage.visibility = View.VISIBLE
+                } else {
+                    binding.postImage.visibility = View.GONE
+                }
+
                 if (post.isliked!!)
                     likeBtn.setColorFilter(ContextCompat.getColor(likeBtn.context, R.color.black))
                 else likeBtn.setColorFilter(ContextCompat.getColor(likeBtn.context, R.color.normal))

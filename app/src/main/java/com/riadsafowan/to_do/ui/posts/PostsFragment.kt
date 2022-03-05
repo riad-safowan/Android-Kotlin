@@ -31,6 +31,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.*
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.RecyclerView.SmoothScroller
+
 
 @AndroidEntryPoint
 class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClickedListener {
@@ -71,13 +74,20 @@ class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClick
 
             viewModel.posts.observe(viewLifecycleOwner) {
                 postAdapter.submitList(it)
+                swipe.isRefreshing = false
+
+                //doesn't work
+                recyclerViewPosts.smoothScrollToPosition(0)
+                recyclerViewPosts.scrollToPosition(0)
             }
 
             fabAddPosts.setOnClickListener {
                 findNavController().navigate(R.id.createPostFragment)
             }
+            swipe.setOnRefreshListener {
+                viewModel.getPost()
+            }
         }
-
     }
 
     override fun onItemClicked(post: PostResponse) {

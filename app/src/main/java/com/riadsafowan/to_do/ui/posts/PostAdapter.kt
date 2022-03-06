@@ -62,6 +62,13 @@ class PostAdapter(private val listener: OnItemClickedListener) :
                         listener.onCommentBtnClicked(post.postId!!)
                     }
                 }
+                comments.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val post = getItem(position)
+                        listener.onCommentBtnClicked(post.postId!!)
+                    }
+                }
             }
         }
 

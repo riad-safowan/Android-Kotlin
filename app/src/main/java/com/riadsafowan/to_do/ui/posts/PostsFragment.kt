@@ -99,6 +99,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts), PostAdapter.OnItemClick
     }
 
     override fun onCommentBtnClicked(postId: Int) {
-        findNavController().navigate(R.id.commentsFragment, bundleOf(Pair("postId", postId)))
+        findNavController().navigate(R.id.commentsBottomSheetFragment, bundleOf(Pair("postId", postId)))
     }
 }

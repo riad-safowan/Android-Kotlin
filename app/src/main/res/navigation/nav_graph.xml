@@ -48,4 +48,8 @@
         android:id="@+id/commentsFragment"
         android:name="com.riadsafowan.to_do.ui.posts.comments.CommentsFragment"
         android:label="CommentsFragment" />
+    <dialog
+        android:id="@+id/commentsBottomSheetFragment"
+        android:name="com.riadsafowan.to_do.ui.posts.comments.CommentsBottomSheetFragment"
+        android:label="CommentsBottomSheetFragment" />
 </navigation>
